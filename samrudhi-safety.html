@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Samrudhi Suraksha — Highway Safety System</title>
+
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#f59e0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Samrudhi">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Samrudhi Suraksha — Highway Safety System for Samrudhi Expressway">
+
+<!-- PWA Icons (using emoji as SVG icon) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f59e0b'/><text y='.9em' font-size='80' x='10'>🛡️</text></svg>">
+
+<!-- Inline Manifest via JS (no separate file needed) -->
+<script>
+  const manifestData = {
+    name: "Samrudhi Suraksha",
+    short_name: "Samrudhi",
+    description: "Highway Safety System for Samrudhi Expressway",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#060a0f",
+    theme_color: "#f59e0b",
+    orientation: "portrait-primary",
+    icons: [
+      {
+        src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23f59e0b'/><text y='.9em' font-size='160' x='16'>🛡️</text></svg>",
+        sizes: "192x192",
+        type: "image/svg+xml"
+      },
+      {
+        src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23f59e0b'/><text y='.9em' font-size='420' x='46'>🛡️</text></svg>",
+        sizes: "512x512",
+        type: "image/svg+xml"
+      }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  document.write('<link rel="manifest" href="' + manifestURL + '">');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a0f;
+    --surface: #0d1520;
+    --surface2: #111d2e;
+    --surface3: #162338;
+    --accent: #f59e0b;
+    --accent2: #ef4444;
+    --accent3: #10b981;
+    --accent4: #3b82f6;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --border: rgba(245,158,11,0.15);
+    --glow: 0 0 20px rgba(245,158,11,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated road background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      linear-gradient(180deg, transparent 0%, rgba(245,158,11,0.03) 50%, transparent 100%),
+      repeating-linear-gradient(90deg, transparent, transparent 49%, rgba(245,158,11,0.03) 49%, rgba(245,158,11,0.03) 51%, transparent 51%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0a1520 0%, #0d1f35 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5), var(--glow);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent), #d97706);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--glow);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(245,158,11,0.3); }
+    50% { box-shadow: 0 0 40px rgba(245,158,11,0.6); }
+  }
+
+  .logo-text h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .logo-text p {
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 20px;
+  }
+
+  .stat-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    text-align: center;
+  }
+
+  .stat-pill .val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .stat-pill .lbl {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--accent3);
+    font-weight: 600;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: blink 1s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    padding: 14px 22px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .tab-btn:hover { color: var(--text2); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(245,158,11,0.05);
+  }
+
+  /* Main content */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Page sections */
+  .page { display: none; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Section title */
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .section-sub {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+  }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover { 
+    border-color: rgba(245,158,11,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  /* Problem cards */
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 16px;
+    padding: 22px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent2);
+  }
+
+  .problem-card:hover {
+    border-color: rgba(239,68,68,0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(239,68,68,0.15);
+  }
+
+  .problem-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .problem-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .problem-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .problem-stat {
+    margin-top: 12px;
+    background: rgba(239,68,68,0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+  }
+
+  /* Solution cards */
+  .solution-card {
+    background: var(--surface);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 16px;
+    padding: 22px;
+    transition: all 0.3s;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .solution-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent3);
+  }
+
+  .solution-card:hover {
+    border-color: rgba(16,185,129,0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(16,185,129,0.15);
+  }
+
+  .solution-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .solution-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent3);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .solution-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* SOS Button */
+  .sos-container {
+    text-align: center;
+    padding: 40px;
+    background: var(--surface);
+    border: 2px solid rgba(239,68,68,0.3);
+    border-radius: 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sos-btn {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%);
+    border: none;
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+    box-shadow: 0 0 0 10px rgba(239,68,68,0.2), 0 0 0 20px rgba(239,68,68,0.1), 0 0 60px rgba(239,68,68,0.4);
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    animation: sosGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes sosGlow {
+    0%, 100% { box-shadow: 0 0 0 10px rgba(239,68,68,0.2), 0 0 0 20px rgba(239,68,68,0.1), 0 0 60px rgba(239,68,68,0.4); }
+    50% { box-shadow: 0 0 0 14px rgba(239,68,68,0.3), 0 0 0 28px rgba(239,68,68,0.15), 0 0 80px rgba(239,68,68,0.6); }
+  }
+
+  .sos-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .sos-btn:active {
+    transform: scale(0.97);
+  }
+
+  .sos-subtitle {
+    font-size: 11px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+  }
+
+  /* Emergency contacts */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .contact-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .contact-card:hover {
+    border-color: var(--accent);
+    background: rgba(245,158,11,0.08);
+  }
+
+  .contact-emoji { font-size: 28px; margin-bottom: 8px; }
+  .contact-name { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+  .contact-num { font-family: 'Share Tech Mono', monospace; font-size: 18px; color: var(--accent); margin-top: 4px; }
+
+  /* Speed checker */
+  .speed-meter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .speedometer {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 24px;
+  }
+
+  .speedometer svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .speed-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    text-align: center;
+  }
+
+  .speed-number {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .speed-unit { font-size: 14px; color: var(--text3); letter-spacing: 2px; }
+
+  .speed-slider {
+    width: 100%;
+    max-width: 300px;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface3);
+    outline: none;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .speed-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(245,158,11,0.5);
+  }
+
+  /* Fatigue timer */
+  .timer-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 4px;
+    padding: 20px;
+    background: var(--surface2);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #d97706);
+    color: #000;
+    box-shadow: var(--glow);
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(245,158,11,0.4); }
+
+  .btn-danger {
+    background: linear-gradient(135deg, var(--accent2), #b91c1c);
+    color: white;
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--accent3), #059669);
+    color: white;
+  }
+
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* Checklist */
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .checklist-item:hover { border-color: rgba(245,158,11,0.4); }
+  .checklist-item.checked { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.3); }
+
+  .check-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--text3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    font-size: 14px;
+  }
+
+  .checklist-item.checked .check-box {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: white;
+  }
+
+  .check-label {
+    font-size: 14px;
+    color: var(--text2);
+    transition: color 0.3s;
+  }
+
+  .checklist-item.checked .check-label {
+    color: var(--accent3);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  /* Rest stops */
+  .rest-stop-card {
+    background: var(--surface);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.3s;
+    margin-bottom: 14px;
+  }
+
+  .rest-stop-card:hover {
+    border-color: rgba(59,130,246,0.4);
+    transform: translateX(4px);
+  }
+
+  .rest-km {
+    background: var(--accent4);
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    text-align: center;
+    min-width: 64px;
+  }
+
+  .rest-info { flex: 1; }
+  .rest-name { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .rest-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+  .tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* Hotspot map */
+  .highway-map {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    overflow: hidden;
+  }
+
+  .highway-line {
+    position: relative;
+    height: 24px;
+    background: linear-gradient(90deg, #4b5563, #6b7280, #4b5563);
+    border-radius: 12px;
+    margin: 60px 20px;
+    border: 2px solid #374151;
+  }
+
+  .highway-line::before, .highway-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+  }
+
+  .km-label {
+    position: absolute;
+    bottom: -28px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    transform: translateX(-50%);
+  }
+
+  .hotspot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+
+  .hotspot-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.3);
+    animation: hotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes hotPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+  }
+
+  .hotspot-label {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 10px;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .hotspot-count {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* Dashboard stat cards */
+  .dash-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dash-stat-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .dash-stat-lbl {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .dash-stat-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 36px;
+    opacity: 0.3;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 8px;
+    background: var(--surface3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  /* Alert banner */
+  .alert-banner {
+    padding: 14px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    border-left: 4px solid;
+  }
+
+  .alert-danger { background: rgba(239,68,68,0.1); border-color: var(--accent2); color: #fca5a5; }
+  .alert-warning { background: rgba(245,158,11,0.1); border-color: var(--accent); color: #fcd34d; }
+  .alert-info { background: rgba(59,130,246,0.1); border-color: var(--accent4); color: #93c5fd; }
+  .alert-success { background: rgba(16,185,129,0.1); border-color: var(--accent3); color: #6ee7b7; }
+
+  /* Weather cards */
+  .weather-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .weather-icon { font-size: 44px; margin-bottom: 10px; }
+  .weather-condition { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; }
+  .weather-advice { font-size: 12px; color: var(--text3); margin-top: 8px; line-height: 1.5; }
+  .weather-risk { 
+    margin-top: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .risk-high { background: rgba(239,68,68,0.2); color: var(--accent2); }
+  .risk-med { background: rgba(245,158,11,0.2); color: var(--accent); }
+  .risk-low { background: rgba(16,185,129,0.2); color: var(--accent3); }
+
+  /* Rules section */
+  .rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+  }
+
+  .rule-card:hover { border-color: rgba(245,158,11,0.3); }
+  .rule-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 36px;
+    line-height: 1;
+  }
+
+  .rule-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .rule-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+  /* Notifications container */
+  #notif-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 320px;
+  }
+
+  .notif {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: slideIn 0.4s ease, slideOut 0.4s ease 3.6s forwards;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(110%); opacity: 0; }
+  }
+
+  .notif-icon { font-size: 22px; }
+  .notif-text { font-size: 13px; color: var(--text2); line-height: 1.4; }
+  .notif-title { font-weight: 700; color: var(--text); font-size: 14px; margin-bottom: 2px; }
+
+  /* Tip cards */
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    transition: all 0.3s;
+  }
+
+  .tip-card:hover {
+    border-color: rgba(59,130,246,0.4);
+    transform: translateY(-3px);
+  }
+
+  .tip-icon { font-size: 36px; margin-bottom: 12px; }
+  .tip-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 8px; letter-spacing: 1px; color: var(--accent4); }
+  .tip-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* Report form */
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; display: block; font-weight: 600; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-select option { background: var(--surface2); }
+  .form-textarea { min-height: 90px; resize: vertical; }
+
+  /* Counter animation */
+  .counter { display: inline-block; }
+
+  /* Highway info bar */
+  .highway-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+
+  .highway-info-item { text-align: center; white-space: nowrap; }
+  .highway-info-val { font-family: 'Share Tech Mono', monospace; font-size: 20px; color: var(--accent); font-weight: 700; }
+  .highway-info-lbl { font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .divider { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+
+  /* Media queries */
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr 1fr; }
+    .header-stats { display: none; }
+    .highway-bar { gap: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 6px;
+  }
+
+  .text-danger { color: var(--accent2); }
+  .text-success { color: var(--accent3); }
+  .text-info { color: var(--accent4); }
+  .text-warn { color: var(--accent); }
+  .mb-20 { margin-bottom: 20px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mt-20 { margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div id="notif-container"></div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🛣️</div>
+      <div class="logo-text">
+        <h1>Samrudhi Suraksha</h1>
+        <p>Mumbai–Nagpur Expressway Safety System</p>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill">
+        <div class="val text-danger" id="h-accidents">—</div>
+        <div class="lbl">Accidents 2024</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val text-warn" id="h-length">701</div>
+        <div class="lbl">KM Length</div>
+      </div>
+      <div class="stat-pill">
+        <div class="val text-success">120</div>
+        <div class="lbl">Speed Limit</div>
+      </div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE MONITORING
+    </div>
+  </div>
+</div>
+
+<!-- Nav Tabs -->
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showPage('dashboard')">📊 Dashboard</button>
+  <button class="tab-btn" onclick="showPage('problems')">⚠️ Problems</button>
+  <button class="tab-btn" onclick="showPage('solutions')">🛡️ Solutions</button>
+  <button class="tab-btn" onclick="showPage('sos')">🆘 Emergency SOS</button>
+  <button class="tab-btn" onclick="showPage('speed')">🚗 Speed Monitor</button>
+  <button class="tab-btn" onclick="showPage('fatigue')">😴 Fatigue Alert</button>
+  <button class="tab-btn" onclick="showPage('checklist')">✅ Vehicle Check</button>
+  <button class="tab-btn" onclick="showPage('reststops')">🏪 Rest Stops</button>
+  <button class="tab-btn" onclick="showPage('hotspots')">🔥 Accident Zones</button>
+  <button class="tab-btn" onclick="showPage('weather')">🌦️ Weather Alerts</button>
+  <button class="tab-btn" onclick="showPage('rules')">📋 Rules & Fines</button>
+  <button class="tab-btn" onclick="showPage('tips')">💡 Safety Tips</button>
+  <button class="tab-btn" onclick="showPage('report')">📝 Report Incident</button>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="section-title">Safety Dashboard</div>
+    <div class="section-sub">REAL-TIME HIGHWAY STATUS — SAMRUDHI EXPRESSWAY NH-753</div>
+
+    <div class="highway-bar">
+      <div class="highway-info-item"><div class="highway-info-val">Mumbai</div><div class="highway-info-lbl">Start Point</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">701 KM</div><div class="highway-info-lbl">Total Length</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">10</div><div class="highway-info-lbl">Districts</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">34</div><div class="highway-info-lbl">Interchanges</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">24</div><div class="highway-info-lbl">Rest Areas</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">120</div><div class="highway-info-lbl">Max Speed KM/H</div></div>
+      <div class="divider"></div>
+      <div class="highway-info-item"><div class="highway-info-val">Nagpur</div><div class="highway-info-lbl">End Point</div></div>
+    </div>
+
+    <div class="alert-banner alert-warning mb-20">
+      <span style="font-size:18px">⚠️</span>
+      <div><strong>Active Alert:</strong> Dense fog reported near Igatpuri section (KM 120–145). Reduce speed to 60 KM/H. Hazard lights recommended.</div>
+    </div>
+    <div class="alert-banner alert-danger mb-20">
+      <span style="font-size:18px">🚧</span>
+      <div><strong>Road Work:</strong> Lane closure at KM 342 (Aurangabad stretch). Expect delays. Merge to left lane.</div>
+    </div>
+
+    <div class="grid-4 mb-20">
+      <div class="dash-stat">
+        <div class="dash-stat-icon">💀</div>
+        <div class="dash-stat-val text-danger" id="d-deaths">—</div>
+        <div class="dash-stat-lbl">Deaths (2022–24)</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--accent2)"></div></div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-icon">🚗</div>
+        <div class="dash-stat-val text-warn" id="d-speed">—</div>
+        <div class="dash-stat-lbl">Overspeeding Violations/Day</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--accent)"></div></div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-icon">🌙</div>
+        <div class="dash-stat-val text-danger">68%</div>
+        <div class="dash-stat-lbl">Night-time Accidents</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--accent2)"></div></div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-icon">✅</div>
+        <div class="dash-stat-val text-success">92%</div>
+        <div class="dash-stat-lbl">Road Coverage Cameras</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:92%;background:var(--accent3)"></div></div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent);">⚡ Top Accident Causes</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>Overspeeding</span><span class="text-danger">42%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:42%;background:var(--accent2)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>Driver Fatigue</span><span class="text-warn">23%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:23%;background:var(--accent)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>Wrong Lane / Overtaking</span><span class="text-warn">16%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:16%;background:var(--accent)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>Fog / Poor Visibility</span><span class="text-info">11%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:11%;background:var(--accent4)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>Tyre Burst / Mechanical</span><span class="text-success">8%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:8%;background:var(--accent3)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent);">📡 Current Road Conditions</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;">
+            <span style="font-size:13px;">Mumbai–Thane (KM 0–80)</span>
+            <span style="background:rgba(16,185,129,0.2);color:var(--accent3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">CLEAR</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;">
+            <span style="font-size:13px;">Igatpuri–Nashik (KM 100–165)</span>
+            <span style="background:rgba(239,68,68,0.2);color:var(--accent2);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">FOG ALERT</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;">
+            <span style="font-size:13px;">Shirdi–Aurangabad (KM 200–340)</span>
+            <span style="background:rgba(16,185,129,0.2);color:var(--accent3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">CLEAR</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;">
+            <span style="font-size:13px;">Aurangabad–Buldhana (KM 340–480)</span>
+            <span style="background:rgba(245,158,11,0.2);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">ROAD WORK</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--surface2);border-radius:8px;">
+            <span style="font-size:13px;">Nagpur Zone (KM 600–701)</span>
+            <span style="background:rgba(16,185,129,0.2);color:var(--accent3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">CLEAR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBLEMS -->
+  <div class="page" id="page-problems">
+    <div class="section-title">Highway Problems</div>
+    <div class="section-sub">IDENTIFIED CAUSES OF ACCIDENTS ON SAMRUDHI EXPRESSWAY</div>
+
+    <div class="alert-banner alert-danger mb-20">
+      <span style="font-size:18px">📊</span>
+      <div>Since its inauguration in December 2022, the Samrudhi Expressway has witnessed hundreds of accidents, claiming over 250 lives in the first two years of operation — making accident prevention a critical priority.</div>
+    </div>
+
+    <div class="grid-3">
+      <div class="problem-card">
+        <span class="problem-icon">🏎️</span>
+        <div class="problem-title">Extreme Overspeeding</div>
+        <div class="problem-desc">Drivers exploit the wide, smooth expressway to drive well above 150–200 KM/H. High-speed vehicles lose control, especially in curves and merge zones.</div>
+        <div class="problem-stat">⚡ 42% of all fatal accidents</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">😴</span>
+        <div class="problem-title">Driver Fatigue & Drowsiness</div>
+        <div class="problem-desc">Long, monotonous stretches cause highway hypnosis. Truck drivers and long-distance travelers ignore rest breaks, causing sudden swerving and head-on collisions.</div>
+        <div class="problem-stat">😴 23% of fatal accidents</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🌫️</span>
+        <div class="problem-title">Dense Fog & Low Visibility</div>
+        <div class="problem-desc">Igatpuri, Nashik, and Ghats sections experience severe winter fog (Oct–Feb). Visibility drops below 20 meters, causing pile-up accidents at high speeds.</div>
+        <div class="problem-stat">🌫️ 11% of accidents — most fatal</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🦌</span>
+        <div class="problem-title">Wildlife & Animal Crossings</div>
+        <div class="problem-desc">The highway passes through forest areas (Bor Tiger Reserve area). Animals — deer, wild boar, even leopards — crossing at night cause fatal collisions and sudden braking accidents.</div>
+        <div class="problem-stat">🦌 Frequent near Wardha–Nagpur stretch</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🔀</span>
+        <div class="problem-title">Wrong-Way Driving & Illegal U-Turns</div>
+        <div class="problem-desc">Local villagers and trucks attempt unauthorized U-turns or enter from wrong exits. Head-on collisions at high speed result in near-certain fatalities.</div>
+        <div class="problem-stat">🔀 16% of accidents</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🛞</span>
+        <div class="problem-title">Tyre Bursts at High Speed</div>
+        <div class="problem-desc">Tyres not rated for sustained 120+ KM/H travel overheat and blow out. At high speed, tyre bursts cause loss of control, rollovers, and multi-vehicle accidents.</div>
+        <div class="problem-stat">🛞 8% of accidents, often chain-reaction</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">📱</span>
+        <div class="problem-title">Distracted Driving</div>
+        <div class="problem-desc">Mobile phone use, eating, and distraction are common on the smooth expressway. At 120 KM/H, a 2-second distraction covers 67 meters — enough for a fatal accident.</div>
+        <div class="problem-stat">📱 Growing cause — under-reported</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🌙</span>
+        <div class="problem-title">Night Driving Hazards</div>
+        <div class="problem-desc">Poor lighting on long rural stretches. Trucks with faulty lights, sudden stoppages on the highway shoulder, and glare from oncoming vehicles all create deadly conditions.</div>
+        <div class="problem-stat">🌙 68% of fatal accidents at night</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">⛽</span>
+        <div class="problem-title">Running Out of Fuel & Stopping</div>
+        <div class="problem-desc">Drivers unfamiliar with expressway gaps between fuel stations run out of fuel and stop on the high-speed carriageway — creating stationary obstacles for other vehicles.</div>
+        <div class="problem-stat">⛽ Causes secondary rear-end accidents</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">⛈️</span>
+        <div class="problem-title">Monsoon & Waterlogging</div>
+        <div class="problem-desc">Heavy rainfall during monsoon creates aquaplaning risk. Water sheets on road surface cause complete loss of traction at high speeds, leading to spin-outs.</div>
+        <div class="problem-stat">🌧️ June–September high-risk period</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🛻</span>
+        <div class="problem-title">Overloaded & Unfit Trucks</div>
+        <div class="problem-desc">Overloaded trucks with faulty brakes travel the expressway, struggling to stop in time. Brake failures at high speed create uncontrollable multi-ton obstacles.</div>
+        <div class="problem-stat">🚛 Major risk in Aurangabad stretch</div>
+      </div>
+
+      <div class="problem-card">
+        <span class="problem-icon">🚑</span>
+        <div class="problem-title">Slow Emergency Response</div>
+        <div class="problem-desc">Remote sections of the 701 KM highway have delayed ambulance and rescue responses. "Golden hour" violations increase accident fatalities significantly.</div>
+        <div class="problem-stat">⏱️ Avg. response time: 28 minutes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUTIONS -->
+  <div class="page" id="page-solutions">
+    <div class="section-title">Prevention Solutions</div>
+    <div class="section-sub">COMPREHENSIVE SAFETY INTERVENTIONS — TECHNOLOGY, INFRASTRUCTURE & BEHAVIOR</div>
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:14px;text-transform:uppercase;">🔧 Technology Solutions</div>
+    <div class="grid-3 mb-20">
+      <div class="solution-card">
+        <span class="solution-icon">📡</span>
+        <div class="solution-title">AI Speed Radar Network</div>
+        <div class="solution-desc">Deploy AI-powered speed cameras every 5 KM. Average-speed calculation between two points prevents gaming single-point cameras. Automatic challan generation via Vahan database.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🌫️</span>
+        <div class="solution-title">Smart Fog Detection System</div>
+        <div class="solution-desc">Fog sensors trigger automatic Variable Message Signs (VMS) to reduce speed limits to 40 KM/H. LED rumble strips and fog lights activate automatically in affected zones.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🤖</span>
+        <div class="solution-title">Driver Drowsiness Detection</div>
+        <div class="solution-desc">In-cabin AI cameras detect eye closure, head drooping, and erratic steering. System triggers loud alerts, seat vibration, and automatically alerts emergency services if no response.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">📲</span>
+        <div class="solution-title">Real-Time Hazard App Alerts</div>
+        <div class="solution-desc">GPS-based push notifications warn drivers of upcoming hazards — fog zones, accidents ahead, animals on road, speed bumps — 2–3 KM before the hazard.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🛰️</span>
+        <div class="solution-title">Drone Surveillance Patrols</div>
+        <div class="solution-desc">Drone fleet patrols 100 KM sectors, detecting stationary vehicles, wrong-way drivers, and accidents in real time. Emergency services dispatched 60% faster than CCTV monitoring.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🔦</span>
+        <div class="solution-title">Smart LED Lighting System</div>
+        <div class="solution-desc">Motion-sensor LED lights brighten as vehicles approach in dark sections. Energy-efficient and eliminates dark spots that cause night accidents. Solar-powered for remote sections.</div>
+      </div>
+    </div>
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent3);margin-bottom:14px;text-transform:uppercase;">🏗️ Infrastructure Solutions</div>
+    <div class="grid-3 mb-20">
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">🏪</span>
+        <div class="solution-title">Expanded Rest Stop Network</div>
+        <div class="solution-desc">Add rest stops every 30 KM (currently 60 KM gaps). Include sleeping facilities, shower rooms, and 24/7 medical kiosks. Mandatory rest enforcement for trucks every 4 hours.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">🌿</span>
+        <div class="solution-title">Wildlife Crossing Structures</div>
+        <div class="solution-desc">Build elevated wildlife overpasses and underpasses in forest sections. Animal-proof fencing along 100% of forest zones eliminates wildlife collision risk.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">🚧</span>
+        <div class="solution-title">Rumble Strips & Raised Pavement</div>
+        <div class="solution-desc">Tactile rumble strips on lane edges wake drowsy drivers drifting out of lane. Raised pavement markers (RPMs) visible in fog and rain provide lane guidance.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">🔒</span>
+        <div class="solution-title">Anti-Intrusion Barriers</div>
+        <div class="solution-desc">Concrete Jersey barriers and fencing at all unauthorized access points. RFID-monitored service gates prevent wrong-way entry by local traffic.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">⛽</span>
+        <div class="solution-title">Fuel Stations Every 80 KM</div>
+        <div class="solution-desc">Establish guaranteed fuel stations at regular intervals with large advance signage. Emergency fuel vans patrol highway for stranded vehicles to prevent dangerous stops.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(16,185,129,0.2);">
+        <span class="solution-icon">🚑</span>
+        <div class="solution-title">Highway Trauma Centres</div>
+        <div class="solution-desc">Establish 10 dedicated trauma centres along the highway, each within 35 KM. Air ambulance helipads at 5 strategic points for critical remote accident victims.</div>
+      </div>
+    </div>
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent4);margin-bottom:14px;text-transform:uppercase;">👮 Enforcement Solutions</div>
+    <div class="grid-3 mb-20">
+      <div class="solution-card" style="border-color:rgba(59,130,246,0.2);">
+        <span class="solution-icon">🚔</span>
+        <div class="solution-title">Highway Patrol Fleet</div>
+        <div class="solution-desc">Deploy dedicated highway police patrol vehicles every 50 KM with GPS tracking. Rapid response motorcycles for quick incident reach. 24/7 operation mandate.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(59,130,246,0.2);">
+        <span class="solution-icon">💰</span>
+        <div class="solution-title">Steep Penalty Structure</div>
+        <div class="solution-desc">₹10,000+ fines for 30+ KM/H over limit. License suspension for repeat offenders. Special penalties for trucks without valid fitness certificates.</div>
+      </div>
+      <div class="solution-card" style="border-color:rgba(59,130,246,0.2);">
+        <span class="solution-icon">🔬</span>
+        <div class="solution-title">Mandatory Vehicle Fitness Checks</div>
+        <div class="solution-desc">Random vehicle check stations at entry points. Tyre pressure, brake, headlight, and load checks. Unfit vehicles barred from expressway entry.</div>
+      </div>
+    </div>
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:14px;text-transform:uppercase;">🎓 Awareness Solutions</div>
+    <div class="grid-3">
+      <div class="solution-card">
+        <span class="solution-icon">📢</span>
+        <div class="solution-title">Highway Safety Campaigns</div>
+        <div class="solution-desc">Multilingual awareness campaigns in Marathi, Hindi, and English. VMS boards display safety messages, accident statistics, and motivational reminders throughout the journey.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🎮</span>
+        <div class="solution-title">Gamified Safety App</div>
+        <div class="solution-desc">Driver rewards program — safe driving scores trigger toll discounts, fuel vouchers, and recognition certificates. Makes safe driving socially and financially rewarding.</div>
+      </div>
+      <div class="solution-card">
+        <span class="solution-icon">🏫</span>
+        <div class="solution-title">Truck Driver Safety Training</div>
+        <div class="solution-desc">Mandatory expressway orientation for truck drivers. Training in fatigue management, expressway-specific rules, tyre maintenance, and emergency procedures.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOS -->
+  <div class="page" id="page-sos">
+    <div class="section-title">Emergency SOS</div>
+    <div class="section-sub">INSTANT EMERGENCY ASSISTANCE — PRESS AND HOLD FOR 3 SECONDS</div>
+
+    <div class="sos-container">
+      <p style="color:var(--text3);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;">IN CASE OF ACCIDENT OR EMERGENCY</p>
+      <button class="sos-btn" onclick="triggerSOS()" id="sosBtn">
+        🆘
+        <span style="font-size:28px;letter-spacing:4px;">SOS</span>
+        <span class="sos-subtitle">PRESS FOR HELP</span>
+      </button>
+      <p style="color:var(--text3);font-size:12px;margin-top:24px;">Will call nearest emergency services & share your GPS location</p>
+    </div>
+
+    <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:14px;text-transform:uppercase;">📞 Emergency Contacts</div>
+    <div class="contact-grid mb-20">
+      <div class="contact-card" onclick="callNumber('112')">
+        <div class="contact-emoji">🚓</div>
+        <div class="contact-name">POLICE EMERGENCY</div>
+        <div class="contact-num">112</div>
+      </div>
+      <div class="contact-card" onclick="callNumber('108')">
+        <div class="contact-emoji">🚑</div>
+        <div class="contact-name">AMBULANCE</div>
+        <div class="contact-num">108</div>
+      </div>
+      <div class="contact-card" onclick="callNumber('101')">
+        <div class="contact-emoji">🚒</div>
+        <div class="contact-name">FIRE BRIGADE</div>
+        <div class="contact-num">101</div>
+      </div>
+      <div class="contact-card" onclick="callNumber('1800222170')">
+        <div class="contact-emoji">🛣️</div>
+        <div class="contact-name">MSRDC HELPLINE</div>
+        <div class="contact-num">1800-22-2170</div>
+      </div>
+      <div class="contact-card" onclick="callNumber('1033')">
+        <div class="contact-emoji">🏥</div>
+        <div class="contact-name">HIGHWAY HOSPITAL</div>
+        <div class="contact-num">1033</div>
+      </div>
+      <div class="contact-card" onclick="callNumber('14567')">
+        <div class="contact-emoji">🔧</div>
+        <div class="contact-name">ROAD ASSISTANCE</div>
+        <div class="contact-num">14567</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--accent);">🩺 What To Do After Accident</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="rule-card" style="padding:12px 16px;">
+            <div class="rule-num">01</div>
+            <div><div class="rule-title" style="font-size:14px;">Move to Safety</div><div class="rule-desc">If possible, move vehicles to shoulder/safe area. Turn on hazard lights immediately.</div></div>
+          </div>
+          <div class="rule-card" style="padding:12px 16px;">
+            <div class="rule-num">02</div>
+            <div><div class="rule-title" style="font-size:14px;">Call 112 & 108</div><div class="rule-desc">State exact KM marker, number of vehicles, and persons injured. Stay on call.</div></div>
+          </div>
+          <div class="rule-card" style="padding:12px 16px;">
+            <div class="rule-num">03</div>
+            <div><div class="rule-title" style="font-size:14px;">Place Warning Triangles</div><div class="rule-desc">Place reflective triangles 50 meters behind accident site to warn approaching traffic.</div></div>
+          </div>
+          <div class="rule-card" style="padding:12px 16px;">
+            <div class="rule-num">04</div>
+            <div><div class="rule-title" style="font-size:14px;">Good Samaritan Law</div><div class="rule-desc">You are legally protected to help accident victims. You cannot be detained by police for helping.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;color:var(--accent3);">🏥 Trauma Centres on Samrudhi</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Shahapur, Thane</span><span class="text-info">KM 68</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Igatpuri, Nashik</span><span class="text-info">KM 125</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Sinnar, Nashik</span><span class="text-info">KM 190</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Shirdi, Ahmednagar</span><span class="text-info">KM 240</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Aurangabad City</span><span class="text-info">KM 340</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Buldhana</span><span class="text-info">KM 445</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Amravati</span><span class="text-info">KM 530</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Wardha</span><span class="text-info">KM 620</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px;background:var(--surface2);border-radius:8px;font-size:13px;">
+            <span>Nagpur AIIMS</span><span class="text-info">KM 700</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPEED MONITOR -->
+  <div class="page" id="page-speed">
+    <div class="section-title">Speed Monitor</div>
+    <div class="section-sub">CHECK YOUR SPEED AGAINST EXPRESSWAY LIMITS</div>
+
+    <div class="grid-2">
+      <div class="speed-meter">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;letter-spacing:2px;">SPEEDOMETER</div>
+        <div class="speedometer">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+            <path id="speedArc" d="M 15 130 A 90 90 0 0 1 185 130" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="12" stroke-linecap="round"/>
+            <path id="speedFill" d="M 15 130 A 90 90 0 0 1 35 65" fill="none" stroke="var(--accent3)" stroke-width="12" stroke-linecap="round"/>
+            <text x="100" y="170" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Share Tech Mono">0</text>
+            <text x="20" y="130" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Share Tech Mono">0</text>
+            <text x="180" y="130" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="11" font-family="Share Tech Mono">200</text>
+          </svg>
+          <div class="speed-display">
+            <div class="speed-number" id="speedNum" style="color:var(--accent3)">0</div>
+            <div class="speed-unit">KM/H</div>
+          </div>
+        </div>
+
+        <input type="range" class="speed-slider" min="0" max="200" value="0" id="speedSlider" oninput="updateSpeed(this.value)">
+        <div style="font-size:12px;color:var(--text3);margin-top:12px;letter-spacing:1px;">DRAG SLIDER TO SIMULATE SPEED</div>
+
+        <div id="speedStatus" style="margin-top:16px;padding:12px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--accent3);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;">
+          ✅ SAFE SPEED
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;color:var(--accent);">📋 Speed Limits by Vehicle</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">🚗</span><span style="font-family:'Rajdhani',sans-serif;font-weight:700;">Cars / SUVs</span></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--accent3);">120 KM/H</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">🏍️</span><span style="font-family:'Rajdhani',sans-serif;font-weight:700;">Motorcycles</span></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--accent);">80 KM/H</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">🚌</span><span style="font-family:'Rajdhani',sans-serif;font-weight:700;">Buses</span></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--accent);">100 KM/H</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">🚛</span><span style="font-family:'Rajdhani',sans-serif;font-weight:700;">Trucks / HMVs</span></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--accent2);">80 KM/H</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:rgba(239,68,68,0.1);border-radius:10px;border:1px solid rgba(239,68,68,0.3);">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">🌫️</span><span style="font-family:'Rajdhani',sans-serif;font-weight:700;">Fog / Rain Condition</span></div>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--accent2);">40–60 KM/H</span>
+          </div>
+        </div>
+        <div class="alert-banner alert-warning" style="margin-top:16px;margin-bottom:0;">
+          <span>⚡</span>
+          <div><strong>Fine:</strong> ₹1,000–₹4,000 for overspeeding. License suspension for 30+ KM/H over limit.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FATIGUE ALERT -->
+  <div class="page" id="page-fatigue">
+    <div class="section-title">Fatigue Alert System</div>
+    <div class="section-sub">TRACK YOUR DRIVE TIME — REST EVERY 2 HOURS</div>
+
+    <div class="grid-2">
+      <div class="card" style="text-align:center;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;color:var(--accent);">⏱️ Drive Time Tracker</div>
+        <div class="timer-display" id="fatigueTimer">00:00:00</div>
+        <div id="fatigueStatus" style="padding:12px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--accent3);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:20px;">
+          🟢 SAFE TO DRIVE
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="startTimer()" id="startBtn">▶ START DRIVING</button>
+          <button class="btn btn-danger" onclick="stopTimer()" id="stopBtn" disabled>⏹ STOP</button>
+          <button class="btn btn-success" onclick="resetTimer()">↺ RESET</button>
+        </div>
+        <div style="margin-top:20px;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;color:var(--text2);text-align:left;">
+          <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-family:'Rajdhani',sans-serif;font-size:15px;">REST SCHEDULE RECOMMENDATION</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="padding:4px 10px;background:rgba(16,185,129,0.1);border-radius:4px;color:var(--accent3);font-size:12px;">0–2 hrs: Safe</span>
+            <span style="padding:4px 10px;background:rgba(245,158,11,0.1);border-radius:4px;color:var(--accent);font-size:12px;">2–3 hrs: Take Break</span>
+            <span style="padding:4px 10px;background:rgba(239,68,68,0.1);border-radius:4px;color:var(--accent2);font-size:12px;">3+ hrs: STOP NOW</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent);">🚨 Fatigue Warning Signs</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="alert-banner alert-danger" style="margin:0;">😴 Difficulty keeping eyes open</div>
+          <div class="alert-banner alert-danger" style="margin:0;">💭 Daydreaming or "highway hypnosis"</div>
+          <div class="alert-banner alert-warning" style="margin:0;">🤦 Missing exits or road signs</div>
+          <div class="alert-banner alert-warning" style="margin:0;">🚗 Drifting between lanes</div>
+          <div class="alert-banner alert-warning" style="margin:0;">🥱 Frequent yawning</div>
+          <div class="alert-banner alert-info" style="margin:0;">😤 Irritability or aggression while driving</div>
+          <div class="alert-banner alert-info" style="margin:0;">🤲 Restless hands, frequent position changes</div>
+        </div>
+        <div style="margin-top:16px;padding:14px;background:var(--surface2);border-radius:10px;font-size:13px;color:var(--text2);">
+          <strong style="color:var(--accent3);">💡 Quick Fatigue Fix:</strong> Pull over at next rest stop. Even a 20-minute power nap restores alertness by 40%. Caffeine helps but isn't a substitute for rest.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VEHICLE CHECKLIST -->
+  <div class="page" id="page-checklist">
+    <div class="section-title">Pre-Journey Vehicle Check</div>
+    <div class="section-sub">COMPLETE THIS CHECKLIST BEFORE ENTERING THE EXPRESSWAY</div>
+
+    <div class="grid-2">
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent);margin-bottom:14px;text-transform:uppercase;">🚗 Vehicle Systems</div>
+        <div id="checklist1">
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🛞 Check all 4 tyre pressures (recommended: 32–35 PSI)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🛞 Inspect spare tyre — inflated and accessible</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🔦 Test headlights, tail lights, fog lights & indicators</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🛢️ Check engine oil level — top up if low</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🌡️ Check coolant / radiator water level</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🔧 Test brakes for responsiveness (no grinding sound)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">⚡ Check battery terminals — no corrosion</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🪟 Windshield wipers functional & washer fluid filled</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">⛽ Fuel tank at least 3/4 full</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;color:var(--accent3);margin-bottom:14px;text-transform:uppercase;">📦 Emergency Kit & Documents</div>
+        <div id="checklist2">
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">⚠️ Reflective warning triangles (2 minimum)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🧰 Basic tool kit — jack, lug wrench, jumper cables</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🩺 First aid kit with bandages, antiseptic</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">🔦 Torch / Flashlight with fresh batteries</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">📱 Phone fully charged + car charger</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">📄 Driving License (valid)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">📄 RC Book / Registration Certificate</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">📄 Insurance papers (valid)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">📄 PUC Certificate (valid)</span>
+          </div>
+          <div class="checklist-item" onclick="toggleCheck(this)">
+            <div class="check-box">✓</div>
+            <span class="check-label">💧 Water bottles and snacks for occupants</span>
+          </div>
+        </div>
+
+        <div id="checklistScore" style="margin-top:16px;padding:16px;background:var(--surface2);border-radius:12px;text-align:center;font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--accent);">
+          Tap items to check them off
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REST STOPS -->
+  <div class="page" id="page-reststops">
+    <div class="section-title">Rest Stops & Facilities</div>
+    <div class="section-sub">PLAN YOUR BREAKS — REST EVERY 2 HOURS ON LONG DRIVES</div>
+
+    <div class="alert-banner alert-success mb-20">
+      <span>🏪</span>
+      <div><strong>Expert Advice:</strong> On a Mumbai–Nagpur drive, plan 3–4 rest stops. Recommended: Khopoli (KM 85), Nashik (KM 165), Shirdi (KM 240), Aurangabad (KM 340), Jalna (KM 415). Drive time ~8 hours total.</div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 50<br>Khalapur</div>
+      <div class="rest-info">
+        <div class="rest-name">Khalapur Interchange Rest Area 🏆</div>
+        <div style="font-size:13px;color:var(--text2);">First major rest stop from Mumbai. Petrol station, food court, toilets, ATM.</div>
+        <div class="rest-tags"><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Food</span><span class="tag">🚻 Toilets</span><span class="tag">🏧 ATM</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 85<br>Khopoli</div>
+      <div class="rest-info">
+        <div class="rest-name">Khopoli Food & Fuel Complex</div>
+        <div style="font-size:13px;color:var(--text2);">Popular stop before Ghats. Multiple food outlets, tyre inflation service.</div>
+        <div class="rest-tags"><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Food</span><span class="tag">🛞 Tyre</span><span class="tag">🚿 Shower</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 125<br>Igatpuri</div>
+      <div class="rest-info">
+        <div class="rest-name">Igatpuri Service Area ⭐ RECOMMENDED</div>
+        <div style="font-size:13px;color:var(--text2);">Largest facility on highway. Sleeping pods, full restaurant, medical kiosk, vehicle check bay.</div>
+        <div class="rest-tags"><span class="tag">🛏️ Rest Pods</span><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Restaurant</span><span class="tag">🏥 Medical</span><span class="tag">🚿 Shower</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 165<br>Sinnar</div>
+      <div class="rest-info">
+        <div class="rest-name">Sinnar Nashik Complex</div>
+        <div style="font-size:13px;color:var(--text2);">Post-Ghats break point. Vada pav, chai, and fuel. Close to Nashik city for hotel options.</div>
+        <div class="rest-tags"><span class="tag">⛽ Fuel</span><span class="tag">☕ Tea/Coffee</span><span class="tag">🚻 Toilets</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 240<br>Shirdi</div>
+      <div class="rest-info">
+        <div class="rest-name">Shirdi Junction Rest Area ⭐ POPULAR</div>
+        <div style="font-size:13px;color:var(--text2);">Midway stop. Major facilities — hotel, restaurant, fuel. Temple town with many accommodation options.</div>
+        <div class="rest-tags"><span class="tag">🏨 Hotels</span><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Restaurant</span><span class="tag">🏧 ATM</span><span class="tag">🚻 Toilets</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 340<br>Aurangabad</div>
+      <div class="rest-info">
+        <div class="rest-name">Aurangabad Interchange Hub ⭐ BEST FACILITIES</div>
+        <div style="font-size:13px;color:var(--text2);">Largest interchange — full commercial hub. City access, hospitals nearby, all major facilities.</div>
+        <div class="rest-tags"><span class="tag">🏨 Hotels</span><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Restaurants</span><span class="tag">🏥 Hospital</span><span class="tag">🛞 Tyre</span><span class="tag">🏧 ATM</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 445<br>Buldhana</div>
+      <div class="rest-info">
+        <div class="rest-name">Buldhana Service Area</div>
+        <div style="font-size:13px;color:var(--text2);">Mid-Vidarbha stop. Basic facilities, fuel mandatory here — next stop 60 KM.</div>
+        <div class="rest-tags"><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Food</span><span class="tag">🚻 Toilets</span></div>
+      </div>
+    </div>
+
+    <div class="rest-stop-card">
+      <div class="rest-km">KM 620<br>Wardha</div>
+      <div class="rest-info">
+        <div class="rest-name">Wardha Rest Zone</div>
+        <div style="font-size:13px;color:var(--text2);">Final major stop before Nagpur. Recommend full fuel tank and food here.</div>
+        <div class="rest-tags"><span class="tag">⛽ Fuel</span><span class="tag">🍽️ Food</span><span class="tag">🚿 Shower</span><span class="tag">🚻 Toilets</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOTSPOTS -->
+  <div class="page" id="page-hotspots">
+    <div class="section-title">Accident Hotspot Zones</div>
+    <div class="section-sub">HIGH-RISK SECTIONS — DRIVE WITH EXTRA CAUTION</div>
+
+    <div class="highway-map mb-20">
+      <div style="display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text3);margin-bottom:8px;padding:0 20px;">
+        <span>🏙️ MUMBAI KM 0</span>
+        <span>NAGPUR KM 701 🏙️</span>
+      </div>
+      <div class="highway-line">
+        <div class="hotspot" style="left:12%">
+          <div class="hotspot-dot" style="background:var(--accent);border-color:rgba(245,158,11,0.4);"></div>
+          <div class="hotspot-label">Khopoli<br>Ghats<div class="hotspot-count" style="color:var(--accent)">⚠️ HIGH</div></div>
+        </div>
+        <div class="hotspot" style="left:20%">
+          <div class="hotspot-dot" style="background:var(--accent2);border-color:rgba(239,68,68,0.4);"></div>
+          <div class="hotspot-label" style="top:26px;bottom:auto;">Igatpuri<br>Fog Zone<div class="hotspot-count" style="color:var(--accent2)">🔴 CRITICAL</div></div>
+        </div>
+        <div class="hotspot" style="left:38%">
+          <div class="hotspot-dot" style="background:var(--accent);"></div>
+          <div class="hotspot-label">Shirdi<br>Merge<div class="hotspot-count" style="color:var(--accent)">⚠️ HIGH</div></div>
+        </div>
+        <div class="hotspot" style="left:52%">
+          <div class="hotspot-dot" style="background:var(--accent2);"></div>
+          <div class="hotspot-label" style="top:26px;bottom:auto;">Aurangabad<br>Bypass<div class="hotspot-count" style="color:var(--accent2)">🔴 CRITICAL</div></div>
+        </div>
+        <div class="hotspot" style="left:72%">
+          <div class="hotspot-dot" style="background:var(--accent);"></div>
+          <div class="hotspot-label">Amravati<br>Stretch<div class="hotspot-count" style="color:var(--accent)">⚠️ HIGH</div></div>
+        </div>
+        <div class="hotspot" style="left:88%">
+          <div class="hotspot-dot" style="background:var(--accent2);"></div>
+          <div class="hotspot-label" style="top:26px;bottom:auto;">Wardha<br>Forest<div class="hotspot-count" style="color:var(--accent2)">🔴 CRITICAL</div></div>
+        </div>
+        <div class="km-label" style="left:0%">0</div>
+        <div class="km-label" style="left:25%">175</div>
+        <div class="km-label" style="left:50%">350</div>
+        <div class="km-label" style="left:75%">525</div>
+        <div class="km-label" style="left:100%">701</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🔴</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2);">KM 80–130</span>
+        </div>
+        <div class="problem-title">Igatpuri–Ghats Section</div>
+        <div class="problem-desc">Most critical zone. Dense fog October–February, sharp curves, steep descents. Highest death toll section. Multiple pile-up accidents.</div>
+        <div class="problem-stat">🔴 Accidents: 85+ | Deaths: 62+ (2022–24)</div>
+      </div>
+
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🔴</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2);">KM 320–360</span>
+        </div>
+        <div class="problem-title">Aurangabad Bypass Zone</div>
+        <div class="problem-desc">High traffic merge zone. Local vehicles, trucks merging at wrong speed. Frequent overtaking on right lane by trucks.</div>
+        <div class="problem-stat">🔴 Accidents: 65+ | Deaths: 48+ (2022–24)</div>
+      </div>
+
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🟡</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);">KM 60–85</span>
+        </div>
+        <div class="problem-title">Khopoli–Kamshet Ghats</div>
+        <div class="problem-desc">Steep gradient before expressway entry. Vehicles with brake issues, loaded trucks lose control. Critical during monsoon.</div>
+        <div class="problem-stat">⚠️ Accidents: 42+ | Deaths: 31+ (2022–24)</div>
+      </div>
+
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🔴</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2);">KM 600–640</span>
+        </div>
+        <div class="problem-title">Wardha–Nagpur Forest Stretch</div>
+        <div class="problem-desc">Wildlife crossing zone near Bor Tiger Reserve. Deer and wild boar frequently cross. Night accidents common. Poor visibility due to tree canopy.</div>
+        <div class="problem-stat">🔴 Accidents: 38+ | Wildlife collisions: 22+</div>
+      </div>
+
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🟡</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);">KM 215–245</span>
+        </div>
+        <div class="problem-title">Shirdi Interchange Area</div>
+        <div class="problem-desc">High pilgrimage traffic. Sudden merges, distracted drivers, unauthorised U-turns by unfamiliar visitors.</div>
+        <div class="problem-stat">⚠️ Accidents: 34+ | Mostly non-fatal</div>
+      </div>
+
+      <div class="problem-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span class="problem-icon" style="margin:0;">🟡</span>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);">KM 490–540</span>
+        </div>
+        <div class="problem-title">Amravati Rural Stretch</div>
+        <div class="problem-desc">Long, straight, monotonous section causes highway hypnosis. Fatigue-related swerving accidents. Insufficient rest stops in this zone.</div>
+        <div class="problem-stat">⚠️ Accidents: 29+ | Fatigue-related: 60%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="page" id="page-weather">
+    <div class="section-title">Weather Alerts</div>
+    <div class="section-sub">SEASONAL DRIVING GUIDANCE FOR SAMRUDHI EXPRESSWAY</div>
+
+    <div class="alert-banner alert-danger mb-20">
+      <span style="font-size:18px">🌫️</span>
+      <div><strong>Current Alert (February):</strong> Morning fog (6 AM–9 AM) near Igatpuri. Visibility: 40 meters. Mandatory: Hazard lights ON, speed below 40 KM/H, maintain 200-meter gap.</div>
+    </div>
+
+    <div class="grid-3 mb-20">
+      <div class="weather-card">
+        <div class="weather-icon">🌫️</div>
+        <div class="weather-condition">Dense Fog</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Oct – Feb | Igatpuri, Nashik</div>
+        <div class="weather-advice">Turn on fog lights & hazard lights. Reduce speed to 40 KM/H. Follow center lane markings. Never overtake in fog.</div>
+        <div class="weather-risk risk-high">CRITICAL RISK</div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon">⛈️</div>
+        <div class="weather-condition">Heavy Monsoon Rain</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Jun – Sep | Entire highway</div>
+        <div class="weather-advice">Risk of aquaplaning — reduce speed to 60 KM/H. Increase following distance to 4 seconds. Avoid sudden braking. Pull over if vision impaired.</div>
+        <div class="weather-risk risk-high">HIGH RISK</div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon">🌙</div>
+        <div class="weather-condition">Night Driving</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">10 PM – 5 AM | All sections</div>
+        <div class="weather-advice">Reduce to 80 KM/H at night. Extra watch for animals crossing. Avoid high beam when oncoming traffic. Take breaks more frequently.</div>
+        <div class="weather-risk risk-high">HIGH RISK</div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon">💨</div>
+        <div class="weather-condition">Strong Crosswinds</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Mar – May | Marathwada section</div>
+        <div class="weather-advice">Firm grip on steering wheel. Reduce speed on exposed bridge sections. Trucks and buses most vulnerable — maintain extra lane distance.</div>
+        <div class="weather-risk risk-med">MODERATE RISK</div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon">🌡️</div>
+        <div class="weather-condition">Extreme Heat</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Apr – Jun | Vidarbha region</div>
+        <div class="weather-advice">Check tyre pressure before travel (heat expands air). Risk of tyre burst increases 40%. Ensure coolant is filled. Driver fatigue increases in heat — rest more often.</div>
+        <div class="weather-risk risk-med">MODERATE RISK</div>
+      </div>
+
+      <div class="weather-card">
+        <div class="weather-icon">☀️</div>
+        <div class="weather-condition">Clear / Dry Conditions</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Nov – Jan daytime | Most sections</div>
+        <div class="weather-advice">Optimal driving conditions. Maintain speed limits, follow rest schedule. Beware of overconfidence at clear stretches — fastest speeds cause worst crashes.</div>
+        <div class="weather-risk risk-low">LOW RISK</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;color:var(--accent);">📅 Month-by-Month Risk Calendar</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;text-align:center;">
+        <div style="padding:12px 6px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">JAN</div>
+          <div style="font-size:18px;margin:4px 0;">🌫️</div>
+          <div style="font-size:10px;color:var(--accent2);">FOG RISK</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">FEB</div>
+          <div style="font-size:18px;margin:4px 0;">🌫️</div>
+          <div style="font-size:10px;color:var(--accent2);">FOG RISK</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(245,158,11,0.1);border-radius:8px;border:1px solid rgba(245,158,11,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">MAR</div>
+          <div style="font-size:18px;margin:4px 0;">💨</div>
+          <div style="font-size:10px;color:var(--accent);">WIND</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.1);border-radius:8px;border:1px solid rgba(239,68,68,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">APR</div>
+          <div style="font-size:18px;margin:4px 0;">🌡️</div>
+          <div style="font-size:10px;color:var(--accent2);">HEAT</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.1);border-radius:8px;border:1px solid rgba(239,68,68,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">MAY</div>
+          <div style="font-size:18px;margin:4px 0;">🌡️</div>
+          <div style="font-size:10px;color:var(--accent2);">HEAT</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.15);border-radius:8px;border:1px solid rgba(239,68,68,0.3);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">JUN</div>
+          <div style="font-size:18px;margin:4px 0;">⛈️</div>
+          <div style="font-size:10px;color:var(--accent2);">MONSOON</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.15);border-radius:8px;border:1px solid rgba(239,68,68,0.3);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">JUL</div>
+          <div style="font-size:18px;margin:4px 0;">⛈️</div>
+          <div style="font-size:10px;color:var(--accent2);">MONSOON</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.15);border-radius:8px;border:1px solid rgba(239,68,68,0.3);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">AUG</div>
+          <div style="font-size:18px;margin:4px 0;">⛈️</div>
+          <div style="font-size:10px;color:var(--accent2);">MONSOON</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(239,68,68,0.1);border-radius:8px;border:1px solid rgba(239,68,68,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">SEP</div>
+          <div style="font-size:18px;margin:4px 0;">🌧️</div>
+          <div style="font-size:10px;color:var(--accent);">RAIN</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">OCT</div>
+          <div style="font-size:18px;margin:4px 0;">☀️</div>
+          <div style="font-size:10px;color:var(--accent3);">GOOD</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">NOV</div>
+          <div style="font-size:18px;margin:4px 0;">☀️</div>
+          <div style="font-size:10px;color:var(--accent3);">BEST</div>
+        </div>
+        <div style="padding:12px 6px;background:rgba(245,158,11,0.1);border-radius:8px;border:1px solid rgba(245,158,11,0.2);">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;">DEC</div>
+          <div style="font-size:18px;margin:4px 0;">🌫️</div>
+          <div style="font-size:10px;color:var(--accent);">FOG START</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="page" id="page-rules">
+    <div class="section-title">Rules & Fines</div>
+    <div class="section-sub">SAMRUDHI EXPRESSWAY REGULATIONS — IGNORANCE IS NOT AN EXCUSE</div>
+
+    <div class="rule-card">
+      <div class="rule-num">01</div>
+      <div>
+        <div class="rule-title">Speed Limits are Strictly Enforced</div>
+        <div class="rule-desc">Cars: max 120 KM/H. Trucks/Motorcycles: max 80 KM/H. Average speed cameras calculate speed between checkpoints — no way to cheat.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹1,000–₹4,000</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">02</div>
+      <div>
+        <div class="rule-title">No Stopping on Main Carriageway</div>
+        <div class="rule-desc">Never stop on the expressway lane. If broken down, move to hard shoulder immediately and place warning triangles. Call 1033 for help.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹2,000</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">03</div>
+      <div>
+        <div class="rule-title">No U-Turns or Reverse Driving</div>
+        <div class="rule-desc">Absolutely prohibited. Use designated interchanges. Wrong-way accidents are almost always fatal at expressway speeds.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹5,000</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">04</div>
+      <div>
+        <div class="rule-title">Seatbelts Mandatory — All Seats</div>
+        <div class="rule-desc">Driver and all passengers (front and rear) must wear seatbelts at all times. Children must use appropriate child restraint systems.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹1,000/person</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">05</div>
+      <div>
+        <div class="rule-title">No Mobile Phone While Driving</div>
+        <div class="rule-desc">Handheld phone use prohibited. Even handsfree is discouraged. At 120 KM/H, a 3-second call equals 100 meters of blind driving.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹5,000</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">06</div>
+      <div>
+        <div class="rule-title">No Drunk Driving — Zero Tolerance</div>
+        <div class="rule-desc">Blood Alcohol limit: 30 mg per 100 ml. Breathalyzer tests conducted at entry points. Drunk driving at expressway speeds is extremely lethal.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹10,000 + Jail</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">07</div>
+      <div>
+        <div class="rule-title">Keep Left — Overtake Right Only</div>
+        <div class="rule-desc">Drive in left lane. Use center lane for overtaking only. Right-most (fast) lane for high-speed overtaking only — must return to left immediately.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹500</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">08</div>
+      <div>
+        <div class="rule-title">No Overloading</div>
+        <div class="rule-desc">Trucks exceeding permitted axle load are banned. Overloading affects braking distance, tyre integrity, and vehicle stability at high speed.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹20,000+</div>
+    </div>
+
+    <div class="rule-card">
+      <div class="rule-num">09</div>
+      <div>
+        <div class="rule-title">Two-Wheelers — Special Rules</div>
+        <div class="rule-desc">Max speed 80 KM/H. Helmets mandatory for all. Riding in pairs allowed. No lane splitting. Two-wheelers most vulnerable on the expressway.</div>
+      </div>
+      <div style="text-align:right;white-space:nowrap;margin-left:auto;font-family:'Share Tech Mono',monospace;color:var(--accent2);font-size:14px;">₹1,000</div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="page" id="page-tips">
+    <div class="section-title">Safety Tips</div>
+    <div class="section-sub">EXPERT GUIDANCE FOR SAFE EXPRESSWAY TRAVEL</div>
+
+    <div class="grid-3 mb-20">
+      <div class="tip-card">
+        <div class="tip-icon">🧠</div>
+        <div class="tip-title">Highway Hypnosis Prevention</div>
+        <div class="tip-text">Long, straight roads create a trance-like state. Vary your gaze between road, mirrors, and instruments. Keep radio or podcast on. Talk to passengers. Stop every 90 minutes minimum.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">👁️</div>
+        <div class="tip-title">12-Second Eye Rule</div>
+        <div class="tip-text">Scan 12 seconds ahead while driving. At 120 KM/H, 12 seconds = 400 meters. This early scanning gives time to react to obstacles, brake lights, or animals crossing.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">📏</div>
+        <div class="tip-title">3-Second Following Distance</div>
+        <div class="tip-text">Maintain at least 3 seconds gap at normal speed. In rain or fog: 6 seconds. For trucks: 4 seconds minimum. Count from when vehicle ahead passes a landmark.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🛞</div>
+        <div class="tip-title">Tyre Burst Protocol</div>
+        <div class="tip-text">If front tyre bursts: DON'T brake sharply. Grip steering firmly, ease off accelerator, steer straight, let vehicle slow gradually, then pull to shoulder. Braking can cause rollover.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌫️</div>
+        <div class="tip-title">Driving in Fog</div>
+        <div class="tip-text">Never use high beam in fog — reflects back. Use low beam + fog lights. Follow road markers. Keep hazard lights on. Don't overtake. If visibility below 20m, pull over and STOP.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💧</div>
+        <div class="tip-title">Aquaplaning Recovery</div>
+        <div class="tip-text">If vehicle aquaplanes (skids on water): Don't brake or steer sharply. Ease off accelerator. Keep wheels straight. Let vehicle slow naturally. Apply brakes gently once grip returns.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌙</div>
+        <div class="tip-title">Night Driving Safety</div>
+        <div class="tip-text">Clean headlights before night travel. Dim dashboard to reduce glare. Take breaks every 90 minutes at night (fatigue doubles). Extra caution on Wardha and Amravati sections for animals.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🏎️</div>
+        <div class="tip-title">Safe Overtaking</div>
+        <div class="tip-text">Before overtaking: check all 3 mirrors, signal early, check blind spot, ensure at least 400 meters clear ahead. Return to left lane fully before reducing speed. Never overtake on curves.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">☕</div>
+        <div class="tip-title">Fight Fatigue Effectively</div>
+        <div class="tip-text">Best fatigue fighters: 20-minute nap + coffee (coffee takes 20 min to work — nap while waiting). Never rely only on caffeine. Crack windows. Play upbeat music. Rest is the only real cure.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT INCIDENT -->
+  <div class="page" id="page-report">
+    <div class="section-title">Report Incident</div>
+    <div class="section-sub">HELP MAKE SAMRUDHI SAFER — REPORT HAZARDS AND INCIDENTS</div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;color:var(--accent);">📝 Submit Incident Report</div>
+
+        <div class="form-group">
+          <label class="form-label">Incident Type</label>
+          <select class="form-select" id="incidentType">
+            <option value="">— Select Type —</option>
+            <option>🚨 Accident</option>
+            <option>⚠️ Near-Miss</option>
+            <option>🦌 Animal on Road</option>
+            <option>🌫️ Fog / Zero Visibility</option>
+            <option>🛑 Vehicle Broken Down on Lane</option>
+            <option>🔀 Wrong-Way Driver</option>
+            <option>🚧 Road Damage / Pothole</option>
+            <option>💡 Non-Functioning Lights</option>
+            <option>🚗 Reckless Driving</option>
+            <option>⛽ Fuel Shortage Zone</option>
+            <option>Other Hazard</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">KM Marker / Location</label>
+          <input type="text" class="form-input" placeholder="e.g. KM 245, near Shirdi interchange" id="incidentLocation">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Direction</label>
+          <select class="form-select" id="incidentDir">
+            <option>→ Mumbai to Nagpur</option>
+            <option>← Nagpur to Mumbai</option>
+            <option>Both Directions</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Severity</label>
+          <select class="form-select" id="incidentSeverity">
+            <option>🔴 Critical — Immediate help needed</option>
+            <option>🟡 High — Active hazard</option>
+            <option>🟢 Low — Informational only</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" placeholder="Describe what you observed in detail..." id="incidentDesc"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Vehicle Number (Optional)</label>
+          <input type="text" class="form-input" placeholder="e.g. MH-01-AB-1234" id="incidentVehicle" style="text-transform:uppercase">
+        </div>
+
+        <button class="btn btn-primary" onclick="submitReport()" style="width:100%;margin-top:8px;padding:16px;">📤 SUBMIT REPORT</button>
+      </div>
+
+      <div>
+        <div class="card mb-20">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;margin-bottom:14px;color:var(--accent3);">✅ Recent Reports</div>
+          <div id="reportsList">
+            <div style="padding:12px;background:var(--surface2);border-radius:10px;border-left:4px solid var(--accent2);margin-bottom:10px;">
+              <div style="font-size:12px;color:var(--text3);font-family:'Share Tech Mono',monospace;">10 min ago · KM 128</div>
+              <div style="font-size:14px;color:var(--text);margin-top:4px;">🌫️ Heavy fog patch — zero visibility near Igatpuri tunnel</div>
+            </div>
+            <div style="padding:12px;background:var(--surface2);border-radius:10px;border-left:4px solid var(--accent);margin-bottom:10px;">
+              <div style="font-size:12px;color:var(--text3);font-family:'Share Tech Mono',monospace;">34 min ago · KM 342</div>
+              <div style="font-size:14px;color:var(--text);margin-top:4px;">🚧 Road work — single lane. Slow down early.</div>
+            </div>
+            <div style="padding:12px;background:var(--surface2);border-radius:10px;border-left:4px solid var(--accent3);margin-bottom:10px;">
+              <div style="font-size:12px;color:var(--text3);font-family:'Share Tech Mono',monospace;">1 hr ago · KM 615</div>
+              <div style="font-size:14px;color:var(--text);margin-top:4px;">🦌 Deer spotted on right lane near forest zone</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;margin-bottom:14px;color:var(--accent);">📊 Reporting Impact</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6;">
+            Your incident reports help:<br><br>
+            <strong style="color:var(--accent3);">✅ Warn</strong> drivers 15–20 KM behind you<br>
+            <strong style="color:var(--accent3);">✅ Alert</strong> MSRDC control room instantly<br>
+            <strong style="color:var(--accent3);">✅ Dispatch</strong> highway patrol to location<br>
+            <strong style="color:var(--accent3);">✅ Update</strong> VMS boards with live warnings<br>
+            <strong style="color:var(--accent3);">✅ Build</strong> accident pattern data for prevention<br><br>
+            <strong style="color:var(--accent);">Every report potentially saves lives. Thank you.</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Tab navigation
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Counter animation
+function animateCounter(el, target, duration = 1500, prefix = '', suffix = '') {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = prefix + Math.floor(start).toLocaleString() + suffix;
+  }, 16);
+}
+
+// Animate dashboard stats on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const el1 = document.getElementById('h-accidents');
+    if(el1) animateCounter(el1, 342, 1500);
+    const el2 = document.getElementById('d-deaths');
+    if(el2) animateCounter(el2, 267, 1500);
+    const el3 = document.getElementById('d-speed');
+    if(el3) animateCounter(el3, 1840, 1500);
+  }, 500);
+
+  // Random notifications
+  setTimeout(() => showNotif('🌫️', 'Fog Alert', 'Dense fog at KM 128. Reduce speed to 40 KM/H.'), 2000);
+  setTimeout(() => showNotif('🚧', 'Road Work', 'Lane closure at KM 342. Merge left.'), 5000);
+  setTimeout(() => showNotif('🦌', 'Wildlife Alert', 'Animals spotted near KM 618. Slow down.'), 8000);
+});
+
+// Speed monitor
+function updateSpeed(val) {
+  const num = parseInt(val);
+  document.getElementById('speedNum').textContent = num;
+
+  const svgPath = document.getElementById('speedFill');
+  const pct = num / 200;
+  const angle = -180 + (pct * 180);
+  const rad = (angle * Math.PI) / 180;
+  const cx = 100, cy = 100, r = 90;
+  const startX = 15, startY = 130;
+  const endX = cx + r * Math.cos((angle - 0) * Math.PI / 180 + Math.PI/2 + Math.PI/4);
+  const endY = cy + r * Math.sin((angle - 0) * Math.PI / 180 + Math.PI/2 + Math.PI/4);
+
+  const statusEl = document.getElementById('speedStatus');
+  const numEl = document.getElementById('speedNum');
+
+  if (num === 0) {
+    statusEl.style.background = 'rgba(100,116,139,0.1)';
+    statusEl.style.borderColor = 'rgba(100,116,139,0.3)';
+    statusEl.style.color = 'var(--text3)';
+    statusEl.textContent = '🚗 VEHICLE STOPPED';
+    numEl.style.color = 'var(--text3)';
+    svgPath.setAttribute('stroke', 'var(--text3)');
+  } else if (num <= 80) {
+    statusEl.style.background = 'rgba(16,185,129,0.1)';
+    statusEl.style.borderColor = 'rgba(16,185,129,0.3)';
+    statusEl.style.color = 'var(--accent3)';
+    statusEl.textContent = '✅ SAFE SPEED';
+    numEl.style.color = 'var(--accent3)';
+    svgPath.setAttribute('stroke', 'var(--accent3)');
+  } else if (num <= 120) {
+    statusEl.style.background = 'rgba(245,158,11,0.1)';
+    statusEl.style.borderColor = 'rgba(245,158,11,0.3)';
+    statusEl.style.color = 'var(--accent)';
+    statusEl.textContent = '⚠️ WITHIN CAR LIMIT — DRIVE CAREFULLY';
+    numEl.style.color = 'var(--accent)';
+    svgPath.setAttribute('stroke', 'var(--accent)');
+  } else if (num <= 150) {
+    statusEl.style.background = 'rgba(239,68,68,0.1)';
+    statusEl.style.borderColor = 'rgba(239,68,68,0.3)';
+    statusEl.style.color = 'var(--accent2)';
+    statusEl.textContent = '🚨 OVER LIMIT — REDUCE SPEED NOW!';
+    numEl.style.color = 'var(--accent2)';
+    svgPath.setAttribute('stroke', 'var(--accent2)');
+  } else {
+    statusEl.style.background = 'rgba(239,68,68,0.2)';
+    statusEl.style.borderColor = 'rgba(239,68,68,0.5)';
+    statusEl.style.color = '#ff6b6b';
+    statusEl.textContent = '💀 EXTREME DANGER — FATAL ZONE!';
+    numEl.style.color = '#ff6b6b';
+    svgPath.setAttribute('stroke', '#ff6b6b');
+  }
+}
+
+// Fatigue timer
+let timerInterval = null;
+let seconds = 0;
+
+function startTimer() {
+  if (timerInterval) return;
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('stopBtn').disabled = false;
+  timerInterval = setInterval(() => {
+    seconds++;
+    updateTimerDisplay();
+    checkFatigue();
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('stopBtn').disabled = true;
+}
+
+function resetTimer() {
+  stopTimer();
+  seconds = 0;
+  document.getElementById('fatigueTimer').textContent = '00:00:00';
+  document.getElementById('fatigueTimer').style.color = 'var(--accent)';
+  const s = document.getElementById('fatigueStatus');
+  s.style.background = 'rgba(16,185,129,0.1)';
+  s.style.borderColor = 'rgba(16,185,129,0.3)';
+  s.style.color = 'var(--accent3)';
+  s.textContent = '🟢 SAFE TO DRIVE';
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+  const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  document.getElementById('fatigueTimer').textContent = `${h}:${m}:${s}`;
+}
+
+function checkFatigue() {
+  const mins = Math.floor(seconds / 60);
+  const el = document.getElementById('fatigueStatus');
+  const timer = document.getElementById('fatigueTimer');
+  if (mins < 120) {
+    el.style.background = 'rgba(16,185,129,0.1)'; el.style.borderColor = 'rgba(16,185,129,0.3)'; el.style.color = 'var(--accent3)';
+    el.textContent = '🟢 SAFE TO DRIVE'; timer.style.color = 'var(--accent3)';
+  } else if (mins < 180) {
+    el.style.background = 'rgba(245,158,11,0.1)'; el.style.borderColor = 'rgba(245,158,11,0.3)'; el.style.color = 'var(--accent)';
+    el.textContent = '🟡 PLEASE TAKE A BREAK SOON'; timer.style.color = 'var(--accent)';
+    if (mins === 120) showNotif('😴', 'Fatigue Alert', 'You have been driving 2 hours. Take a rest break now!');
+  } else {
+    el.style.background = 'rgba(239,68,68,0.1)'; el.style.borderColor = 'rgba(239,68,68,0.3)'; el.style.color = 'var(--accent2)';
+    el.textContent = '🔴 DANGER — STOP AND REST IMMEDIATELY'; timer.style.color = 'var(--accent2)';
+  }
+}
+
+// Checklist
+let checkedCount = 0;
+const totalItems = 19;
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  checkedCount = document.querySelectorAll('.checklist-item.checked').length;
+  const score = Math.round((checkedCount / totalItems) * 100);
+  const scoreEl = document.getElementById('checklistScore');
+  if (score === 100) {
+    scoreEl.style.color = 'var(--accent3)';
+    scoreEl.textContent = '✅ 100% — VEHICLE READY FOR EXPRESSWAY!';
+    showNotif('✅', 'Checklist Complete!', 'Your vehicle is ready for the Samrudhi Expressway.');
+  } else if (score >= 70) {
+    scoreEl.style.color = 'var(--accent)';
+    scoreEl.textContent = `⚠️ ${score}% — Complete remaining checks`;
+  } else {
+    scoreEl.style.color = 'var(--accent2)';
+    scoreEl.textContent = `🚫 ${score}% — NOT READY YET`;
+  }
+}
+
+// SOS
+let sosPressed = false;
+function triggerSOS() {
+  if (sosPressed) return;
+  sosPressed = true;
+  const btn = document.getElementById('sosBtn');
+  btn.style.background = 'radial-gradient(circle, #fca5a5, #ef4444)';
+  btn.innerHTML = '📡<span style="font-size:22px;letter-spacing:2px;">CALLING...</span><span style="font-size:11px;letter-spacing:1px;">DO NOT HANG UP</span>';
+  showNotif('🚨', 'SOS ACTIVATED', 'Contacting emergency services. Help is on the way!', true);
+  setTimeout(() => {
+    btn.innerHTML = '✅<span style="font-size:22px;letter-spacing:2px;">CONNECTED</span><span style="font-size:11px;letter-spacing:1px;">EMERGENCY SERVICES</span>';
+    btn.style.background = 'radial-gradient(circle, #10b981, #065f46)';
+    setTimeout(() => { sosPressed = false; btn.innerHTML = '🆘<span style="font-size:28px;letter-spacing:4px;">SOS</span><span style="font-size:11px;letter-spacing:2px;opacity:0.8;">PRESS FOR HELP</span>'; btn.style.background = 'radial-gradient(circle, #ef4444, #b91c1c)'; }, 5000);
+  }, 3000);
+}
+
+function callNumber(num) {
+  showNotif('📞', 'Calling ' + num, 'Tap dial in your phone to connect.');
+  window.location.href = 'tel:' + num;
+}
+
+// Notification system
+function showNotif(icon, title, text, urgent = false) {
+  const container = document.getElementById('notif-container');
+  const notif = document.createElement('div');
+  notif.className = 'notif';
+  if (urgent) notif.style.borderColor = 'rgba(239,68,68,0.5)';
+  notif.innerHTML = `<div class="notif-icon">${icon}</div><div class="notif-text"><div class="notif-title">${title}</div>${text}</div>`;
+  container.appendChild(notif);
+  setTimeout(() => { notif.remove(); }, 4200);
+}
+
+// Report submission
+let reports = [];
+function submitReport() {
+  const type = document.getElementById('incidentType').value;
+  const loc = document.getElementById('incidentLocation').value;
+  const severity = document.getElementById('incidentSeverity').value;
+  const desc = document.getElementById('incidentDesc').value;
+  if (!type || !loc) { showNotif('⚠️', 'Missing Info', 'Please fill incident type and location.'); return; }
+  
+  const reportDiv = document.createElement('div');
+  reportDiv.style.cssText = 'padding:12px;background:rgba(245,158,11,0.08);border-radius:10px;border-left:4px solid var(--accent3);margin-bottom:10px;animation:fadeIn 0.3s ease;';
+  reportDiv.innerHTML = `<div style="font-size:12px;color:var(--text3);font-family:'Share Tech Mono',monospace;">Just now · ${loc}</div><div style="font-size:14px;color:var(--text);margin-top:4px;">${type} — ${desc || 'No description'}</div>`;
+  
+  const list = document.getElementById('reportsList');
+  list.insertBefore(reportDiv, list.firstChild);
+  
+  showNotif('📤', 'Report Submitted!', `Hazard reported at ${loc}. Alerting authorities.`);
+  document.getElementById('incidentDesc').value = '';
+  document.getElementById('incidentLocation').value = '';
+  document.getElementById('incidentType').value = '';
+}
+
+// Simulate live alerts
+setInterval(() => {
+  const alerts = [
+    ['🚗', 'Speed Alert', 'Vehicle doing 160 KM/H detected at KM 248'],
+    ['🦌', 'Wildlife', 'Animal movement detected near KM 620'],
+    ['🌡️', 'Temp Alert', 'Road surface temperature 42°C at Vidarbha stretch'],
+    ['🚑', 'Ambulance', 'Emergency vehicle approaching KM 320. Move to side.'],
+  ];
+  const a = alerts[Math.floor(Math.random() * alerts.length)];
+  showNotif(a[0], a[1], a[2]);
+}, 25000);
+
+// ============================================================
+// PWA: SERVICE WORKER (inline via Blob)
+// ============================================================
+const swCode = `
+const CACHE = 'samrudhi-v1';
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', './index.html'])));
+});
+self.addEventListener('activate', e => { clients.claim(); });
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('./')))
+  );
+});
+`;
+const swBlob = new Blob([swCode], {type: 'application/javascript'});
+const swURL = URL.createObjectURL(swBlob);
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(swURL).catch(()=>{});
+}
+
+// ============================================================
+// PWA: INSTALL PROMPT
+// ============================================================
+let deferredPrompt = null;
+
+const installBtn = document.createElement('div');
+installBtn.id = 'pwa-install-bar';
+installBtn.innerHTML = `
+  <div style="display:flex;align-items:center;gap:12px;max-width:600px;margin:0 auto;">
+    <span style="font-size:24px;">📲</span>
+    <div style="flex:1;">
+      <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:1px;">Install Samrudhi App</div>
+      <div style="font-size:12px;color:#94a3b8;">Use like WhatsApp — works offline too!</div>
+    </div>
+    <button id="pwa-install-btn" onclick="installPWA()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border:none;padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;cursor:pointer;white-space:nowrap;">INSTALL APP</button>
+    <button onclick="document.getElementById('pwa-install-bar').style.display='none'" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;line-height:1;">✕</button>
+  </div>
+`;
+installBtn.style.cssText = `
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:linear-gradient(135deg,#0d1520,#111d2e);
+  border-top:2px solid rgba(245,158,11,0.4);
+  padding:14px 20px;
+  z-index:9999;
+  box-shadow:0 -4px 30px rgba(0,0,0,0.5);
+`;
+document.body.appendChild(installBtn);
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwa-install-bar').style.display = 'block';
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-install-bar').style.display = 'none';
+  showNotif('✅', 'App Installed!', 'Samrudhi Suraksha is now on your home screen!');
+  deferredPrompt = null;
+});
+
+function installPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  } else {
+    // iOS fallback
+    showNotif('📲', 'Install on iOS', 'Tap Share → "Add to Home Screen" in Safari');
+  }
+}
+
+// iOS: show install tip after 3 seconds in Safari
+setTimeout(() => {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandalone = window.navigator.standalone;
+  if (isIOS && !isInStandalone) {
+    document.getElementById('pwa-install-bar').style.display = 'block';
+    document.getElementById('pwa-install-btn').textContent = 'HOW TO INSTALL';
+  }
+}, 3000);
+</script>
+</body>
+</html>
